@@ -1,0 +1,27 @@
+def load_data(data_dir):
+ images = []
+ landmarks = []
+ for filename in os.listdir(data_dir):
+ if filename.endswith('.jpg'):
+ img = cv2.imread(os.path.join(data_dir, filename))
+ img = cv2.resize(img, (100, 100)) # Resize image to
+desired input shape
+ images.append(img)
+ landmark_file = filename.replace('.jpg', '.txt') 
+with open(os.path.join(data_dir, landmark_file), 'r') as f:
+ landmark = [float(coord) for coord in
+f.readline().strip().split()]
+ landmarks.append(landmark)
+ return np.array(images), np.array(landmarks)
+# Example data directory containing images and corresponding
+landmark files
+data_dir = 'data/'
+# Define input shape and number of landmarks
+input_shape = (100, 100, 3) # Example input shape
+num_landmarks = 5 # Example number of landmarks
+# Create and compile the model
+model = landmark_detection_model(input_shape,
+num_landmarks)
+model.compile(optimizer='adam', loss='mean_squared_error')
+# Load data
+X_train, y_train = load_data(data_dir)
